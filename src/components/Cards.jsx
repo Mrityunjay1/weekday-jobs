@@ -62,11 +62,30 @@ const Cards = (item) => {
           </Button>
         )}
         <CardHeader title={item?.jobRole} subheader={item?.location} />
+
         <CardContent>
-          <Typography variant="h5" component="div">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            {item.minJdSalary !== null && (
+              <Typography style={{ marginBottom: "10px", fontSize: "1rem" }}>
+                Min Salary: {item.minJdSalary} USD
+              </Typography>
+            )}
+            {item.minExp !== null && (
+              <Typography style={{ marginBottom: "10px", fontSize: "1rem" }}>
+                Min Exp: {item.minExp} Yrs
+              </Typography>
+            )}
+          </div>
+          <Typography variant="h6" component="div">
             About Company
           </Typography>
-          <Typography variant="h6" component="div">
+          <Typography variant="h7" component="div">
             About Us
           </Typography>
           <p>

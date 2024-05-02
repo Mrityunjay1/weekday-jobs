@@ -16,9 +16,12 @@ function App() {
   const limit = 10;
   const [locations, setLocations] = useState([]);
   const [jobRoles, setJobRoles] = useState([]);
+  const [minSalary, setMinSalary] = useState([]);
+  const [minExp, setMinExp] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState("");
   const [selectedJobRole, setSelectedJobRole] = useState("");
   const [selectedMinSalary, setSelectedMinSalary] = useState("");
+  const [selectedMinExp, setSelectedMinExp] = useState("");
 
   const fetchData = async (offset) => {
     const requestOptions = {
@@ -51,6 +54,8 @@ function App() {
       setOffset(limit);
       setLocations([...new Set(initialData.map((item) => item.location))]);
       setJobRoles([...new Set(initialData.map((item) => item.jobRole))]);
+      setMinSalary([...new Set(initialData.map((item) => item.minJdSalary))]);
+      setMinExp([...new Set(initialData.map((item) => item.minExp))]);
     });
   }, []);
 
@@ -71,6 +76,10 @@ function App() {
 
   const handleMinSalaryChange = (event) => {
     setSelectedMinSalary(event.target.value);
+  };
+
+  const handleMinExpChange = (event) => {
+    setSelectedMinExp(event.target.value);
   };
 
   return (
@@ -129,45 +138,58 @@ function App() {
                   onChange={handleMinSalaryChange}
                 >
                   <MenuItem value="">No Min Salary</MenuItem>
-                  {/* Add options for min salary */}
+                  {minSalary.map((minSal, index) => (
+                    <MenuItem key={index} value={minSal}>
+                      {minSal}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl style={{ width: "20vw", marginRight: "20px" }}>
+                <InputLabel id="minexp-label">Min Exp</InputLabel>
+                <Select
+                  labelId="minexp-label"
+                  id="minexp"
+                  value={selectedMinExp}
+                  onChange={handleMinExpChange}
+                >
+                  <MenuItem value="">No Min Exp</MenuItem>
+                  {minExp.map((minExp, index) => (
+                    <MenuItem key={index} value={minExp}>
+                      {minExp}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </div>
-            {data.length > 0 && (
-              <Grid container spacing={3}>
-                {data
-                  .filter(
-                    (item) =>
-                      (!selectedLocation ||
-                        item.location === selectedLocation) &&
-                      (!selectedJobRole || item.jobRole === selectedJobRole) &&
-                      (!selectedMinSalary ||
-                        item.minSalary >= selectedMinSalary)
-                  )
-                  .map((item, i) => {
-                    return (
-                      <Grid item xs={12} sm={6} md={4} lg={3} key={i}>
-                        <Cards {...item} />
-                      </Grid>
-                    );
-                  })}
-              </Grid>
-            )}
-            {data.length === 0 && <p>No jobs found</p>}
-            {data.length !== 0 && (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginTop: "20px",
-                }}
-              >
-                <Button onClick={loadMore} style={{ fontSize: "1.2rem" }}>
-                  Load More
-                </Button>
-              </div>
-            )}
+            <Grid container spacing={3}>
+              {data
+                .filter(
+                  (item) =>
+                    (!selectedLocation || item.location === selectedLocation) &&
+                    (!selectedJobRole || item.jobRole === selectedJobRole) &&
+                    (!selectedMinSalary ||
+                      item.minJdSalary >= selectedMinSalary) &&
+                    (!selectedMinExp || item.minExp >= selectedMinExp)
+                )
+                .map((item, i) => (
+                  <Grid item xs={12} sm={6} md={4} lg={3} key={i}>
+                    <Cards {...item} />
+                  </Grid>
+                ))}
+            </Grid>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: "20px",
+              }}
+            >
+              <Button onClick={loadMore} style={{ fontSize: "1.2rem" }}>
+                Load More
+              </Button>
+            </div>
           </>
         )}
       </div>
